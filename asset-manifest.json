@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/countdown-number-solver/static/css/main.e6238c26.css",
-    "main.js": "/countdown-number-solver/static/js/main.02f6dafe.js",
+    "main.js": "/countdown-number-solver/static/js/main.f3891515.js",
     "index.html": "/countdown-number-solver/index.html",
     "main.e6238c26.css.map": "/countdown-number-solver/static/css/main.e6238c26.css.map",
-    "main.02f6dafe.js.map": "/countdown-number-solver/static/js/main.02f6dafe.js.map"
+    "main.f3891515.js.map": "/countdown-number-solver/static/js/main.f3891515.js.map"
   },
   "entrypoints": [
     "static/css/main.e6238c26.css",
-    "static/js/main.02f6dafe.js"
+    "static/js/main.f3891515.js"
   ]
 }
