@@ -1,6 +1,6 @@
 {
-  "short_name": "Countdown numbers quiz solver",
-  "name": "Countdown numbers quiz solver",
+  "short_name": "Countdown letters and numbers quiz solver",
+  "name": "Countdown letters and numbers quiz solver",
   "icons": [
     {
       "src": "android-chrome-192x192.png",
@@ -17,5 +17,5 @@
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#1c202b",
-  "background_color": "#1c202b"
+  "background_color": "#ffffff"
 }
