@@ -1,100 +1,162 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
-import { Solver } from './solver';
-import { handleFocus, getOccurrences } from '../utils';
+import { QuizSolver } from './QuizSolver';
+import { handleFocus } from '../utils';
+
+function QuizResult({resultFound, equation, offset}) {
+  let result;
+
+  if (resultFound) {
+    result = equation.split(' ').map((expression, index) => (<span className={`expression ${offset ? 'text-warning' : 'text-success'}`} key={index}>{expression}</span>));
+
+    if (offset)
+      result = (<React.Fragment>{result}<br/><small>Off by {offset}</small></React.Fragment>);
+
+  } else {
+    result = (<span className='text-danger'>Cannot find a solution</span>);
+  }
+
+  return (
+    <React.Fragment>{result}</React.Fragment>
+  )
+}
 
 function NumbersQuizSolver() {
-  const [numbers, setNumbers] = useState(Array(6).fill(''));
+  const allAvailableNumbers = [25, 50, 75, 100, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+  const [numbers, setNumbers] = useState([]);
   const [targetNumber, setTargetNumber] = useState('');
   const [solution, setSolution] = useState(null);
   const [solving, setSolving] = useState(false);
 
-  const allAvailableNumbers = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 25, 50, 75, 100];
+  const targetInputRef = useRef(null);
 
-  const numbersValid = (availableNumbers, target) => {
-    const validNumberOccurences = getOccurrences(allAvailableNumbers);
-
-    const availableNumbersOccurences = getOccurrences(availableNumbers);
-
-    let valid = parseInt(target) > 0;
-
-    Object.keys(availableNumbersOccurences).forEach((number) => {
-      if (!validNumberOccurences[number] || availableNumbersOccurences[number] > validNumberOccurences[number]) {
-        valid = false;
-      }
-    });
-    return valid;
+  const numbersValid = () => {
+    return parseInt(targetNumber) > 0 && maxSelectionReached();
   }
 
   const findSolution = (event) => {
     event.preventDefault();
 
     setSolving(true);
-    const solver = new Solver(numbers, targetNumber);
+    const solver = new QuizSolver(numbers, targetNumber);
     setTimeout(() => {
       setSolution(solver.solve());
-      setNumbers(Array(6).fill(''));
+      setNumbers([]);
       setTargetNumber('');
       setSolving(false);
     }, 0)
 
   }
 
+  const maxSelectionReached = () => {
+    return numbers.length >= 6;
+  }
+
+  const maxAvailableReached = (number) => {
+    if (number > 10) {
+      return numbers.indexOf(number) > -1;
+    } else {
+      return numbers.filter((selectedNumber) => selectedNumber === number).length >= 2;
+    }
+  }
+
+  const addNumber = (number) => {
+    setSolution(null);
+
+    const currentNumbers = [...numbers];
+    currentNumbers.push(number);
+    setNumbers(currentNumbers);
+
+    if (currentNumbers.length >= 6)
+      targetInputRef.current.focus();
+  }
+
+  const canSolve = (numbersValid() && !solving);
+
+  const selectedNumbersList = (
+    <div id='numbers-selected'>
+      {
+        [...Array(6)].map((_, index) => (
+          <div key={`number-selected-${index}`} className='number-selected'>{numbers[index] || (<span>&nbsp;</span>)}</div>
+        ))
+      }
+    </div>
+  )
+
   return (
-    <form className='mt-3' onSubmit={findSolution}>
-      <div className='row g-3'>
+    <form onSubmit={findSolution}>
+      {
+        (solving || solution) ? (<code id='numbers-solution' className='d-block'>{solving ? 'Solving...' : (<QuizResult {...solution}></QuizResult>)}</code>) : selectedNumbersList
+      }
+      <div id='numbers-selection-buttons' className='mb-3' role='group'>
         {
-          numbers.map((currentNumber, index) => (
-            <div className='col-md-4' key={`col-${index}`}>
-              <div className='form-group'>
-                <label htmlFor={`input-${index}`} className='visually-hidden'>Number {index + 1}</label>
-                <input
-                  id={`input-${index}`}
-                  type='number'
-                  pattern='[0-9]*'
-                  inputMode='numeric'
-                  className='form-control'
-                  list='available-numbers'
-                  placeholder={`Number ${index + 1}`}
-                  value={currentNumber}
-                  onFocus={handleFocus}
-                  onChange={(event) => {
-                    let currentNumbers = [...numbers];
-                    currentNumbers[index] = event.target.value ? parseInt(event.target.value) : '';
-                    setNumbers(currentNumbers);
-                  }}
-                >
-                </input>
-              </div>
-            </div>
-          ))
+          allAvailableNumbers.map((number) => {
+            return (
+              <button
+                key={`select-number-${number}`}
+                type='button'
+                className={`px-1 btn btn-light ${number > 10 ? 'btn-b' : 'btn-s'}`}
+                data-value={number}
+                disabled={maxAvailableReached(number) || maxSelectionReached()}
+                onClick={() => addNumber(number)}
+              >
+                {number}
+              </button>
+            )
+          })
         }
 
-        <div className='col-md-4'>
-          <label htmlFor='input-target-number' className='visually-hidden'>Target</label>
-          <div className='input-group'>
-            <input
-              id='input-target-number'
-              type='number'
-              pattern='[0-9]*'
-              inputMode='numeric'
-              className='form-control'
-              placeholder='Target'
-              value={targetNumber}
-              onFocus={handleFocus}
-              onChange={(event) => setTargetNumber(event.target.value ? parseInt(event.target.value) : '')}
-            >
-            </input>
+        <button
+          type='button'
+          className='btn btn-light btn-clear'
+          disabled={numbers.length === 0}
+          onClick={() => {
+            setNumbers([]);
+          }}
+        >
+          C
+        </button>
 
-            <button className='btn btn-primary' type='submit' disabled={!numbersValid(numbers, targetNumber) || solving}>{solving ? 'Solving...' : 'Solve'}</button>
-          </div>
-        </div>
+        <button
+          type='button'
+          className='btn btn-light btn-backspace'
+          disabled={numbers.length === 0}
+          onClick={() => {
+            const currentNumbers = [...numbers];
+            currentNumbers.pop();
+            setNumbers(currentNumbers);
+          }}
+        >
+          &#9003;
+        </button>
       </div>
 
-      {solution && (<pre className='p-3 mt-3 bg-light'>{solution}</pre>)}
-      <datalist id='available-numbers'>
-        {[...new Set(allAvailableNumbers)].map((number) => (<option key={`available-number-${number}`} value={number}></option>))}
-      </datalist>
+
+      <div className='d-flex'>
+        <label htmlFor='input-target-number' className='visually-hidden'>Target</label>
+
+        <input
+          id='input-target-number'
+          type='number'
+          pattern='[0-9]*'
+          inputMode='numeric'
+          className='form-control'
+          placeholder='Target'
+          value={targetNumber}
+          onFocus={handleFocus}
+          ref={targetInputRef}
+          onChange={(event) => {
+            const inputValue = event.target.value;
+            if (inputValue.length < 4)
+              setTargetNumber(inputValue === '' ? '' : parseInt(inputValue))
+          }}
+        >
+        </input>
+        <button className={`btn ${canSolve ? 'text-primary' : 'text-muted'} px-3`} type='submit' disabled={!canSolve}>Solve</button>
+
+
+      </div>
     </form>
   );
 }

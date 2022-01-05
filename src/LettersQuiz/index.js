@@ -7,11 +7,16 @@ function LettersQuizSolver() {
   const [results, setResults] = useState([]);
 
   const isSuperset = (set, subset) => {
-    for (let elem of subset) {
+    if (set.size < subset.size) {
+      return false;
+    }
+
+    for (const elem of subset) {
       if (!set.has(elem)) {
         return false;
       }
     }
+
     return true;
   }
 
@@ -34,7 +39,7 @@ function LettersQuizSolver() {
     const indexedLetters = new Set(groupedLetters.map((group) => group.map((letter, index) => `${letter}${index}`)).flat());
     const wordsFound = [];
 
-    for (let i = 0; i < dictionary.length; i++) {
+    for (let [i, dictionaryLength] = [0, dictionary.length]; i < dictionaryLength; i++) {
       if (wordsFound.length < 5) {
         const word = dictionary[i];
         if (isSuperset(indexedLetters, new Set(word.i))) {
@@ -61,39 +66,40 @@ function LettersQuizSolver() {
     loadDict();
   }, [])
 
+  const canFindWords = dictionary && lettersValid();
+
   return (
-    <form className='mt-3' onSubmit={findWords}>
-      <div className='row g-3'>
-        <div className='col-md-4'>
-          <label htmlFor='input-target-number' className='visually-hidden'>Letters</label>
-          <div className='input-group'>
-            <input
-              id='input-letters-number'
-              type='string'
-              spellCheck='false'
-              autoCorrect='off'
-              autoComplete='false'
-              autoCapitalize='none'
-              className='form-control'
-              placeholder='Letters'
-              value={letters}
-              onFocus={handleFocus}
-              onChange={(event) => setLetters(event.target.value)}
-            >
-            </input>
-            <button className='btn btn-primary' type='submit' disabled={!(dictionary && lettersValid())}>Find words</button>
-          </div>
-        </div>
+    <form onSubmit={findWords}>
+
+      <div className='d-flex'>
+        <label htmlFor='input-target-number' className='visually-hidden'>Letters</label>
+        <input
+          id='input-letters-number'
+          type='string'
+          spellCheck='false'
+          autoCorrect='off'
+          autoComplete='false'
+          autoCapitalize='none'
+          className='form-control'
+          placeholder='Letters...'
+          value={letters}
+          onFocus={handleFocus}
+          onChange={(event) => {
+            const inputValue = event.target.value;
+            if (inputValue.length < 10)
+              setLetters(inputValue);
+          }}
+        >
+        </input>
+
+        <button className={`btn ${canFindWords ? 'text-primary' : 'text-muted'} px-3`} type='submit' disabled={!canFindWords}>Solve</button>
       </div>
 
+
       {results.length > 0 && (
-        <div className='row g-3'>
-          <div className='col-md-4'>
-            <ul className='list-group mt-3'>
-              {results.map((word, index) => (<li className='list-group-item d-flex justify-content-between align-items-center' key={`word-${index}`}><div className='me-auto'>{word.w}</div><span className='badge bg-light text-dark rounded-pill"'>{word.l}</span></li>))}
-            </ul>
-          </div>
-        </div>
+        <ul id='words-solutions' className='list-group'>
+          {results.map((word, index) => (<li className='list-group-item d-flex justify-content-between align-items-center' key={`word-${index}`}><div className='me-auto'>{word.w}</div><span className='text-muted'>{word.l}</span></li>))}
+        </ul>
       )}
     </form>
   );

@@ -1,0 +1,194 @@
+$primary: #007aff;
+$danger: #ff3b30;
+$warning: #ff9500;
+$light: #e9e9ea;
+
+$gray-300: #e5e5ea;
+$gray-400: #c6c6c8;
+$gray-600: #8e8e93;
+
+$input-color: var(--bs-body-color);
+
+$input-border-width: 0;
+$input-btn-padding-x: 0.8333rem;
+$input-btn-padding-y: 0.3125rem;
+$input-bg: var(--bs-light);
+
+$list-group-bg: var(--bs-white, #ffffff);
+$list-group-color: var(--bs-body-color);
+
+$border-radius: 10px;
+
+// Configuration
+@import "../node_modules/bootstrap/scss/functions";
+@import "../node_modules/bootstrap/scss/variables";
+@import "../node_modules/bootstrap/scss/mixins";
+@import "../node_modules/bootstrap/scss/utilities";
+
+// Layout & components
+@import "../node_modules/bootstrap/scss/root";
+@import "../node_modules/bootstrap/scss/reboot";
+@import "../node_modules/bootstrap/scss/type";
+@import "../node_modules/bootstrap/scss/containers";
+@import "../node_modules/bootstrap/scss/grid";
+@import "../node_modules/bootstrap/scss/forms";
+@import "../node_modules/bootstrap/scss/buttons";
+
+@import "../node_modules/bootstrap/scss/badge";
+@import "../node_modules/bootstrap/scss/list-group";
+
+// Helpers
+@import "../node_modules/bootstrap/scss/helpers";
+
+// Utilities
+@import "../node_modules/bootstrap/scss/utilities/api";
+
+
+html, body {
+  height: 100%;
+  body {
+    background-color: #f2f2f6;
+  }
+}
+
+main.container {
+  padding: 1.25rem;
+  > .g-3 {
+    --bs-gutter-y: 1.25rem;
+  }
+  form {
+    padding: $spacer;
+    background: var(--bs-white, #{$white});
+    border-radius: $border-radius;
+
+
+    button[type="submit"] {
+      margin-right: -$spacer;
+    }
+
+    & + form {
+      margin-top: 1.25rem;
+    }
+  }
+}
+
+#words-solutions {
+  margin: -$spacer;
+  margin-top: $spacer;
+
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+
+  .list-group-item {
+    border: none;
+    position: relative;
+    &:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      height: 1px;
+      background-color: var(--bs-gray-400, #{$gray-400});
+      transform: scaleY(0.33);
+    }
+  }
+}
+
+#numbers-selected {
+  margin-bottom: $spacer;
+
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+
+  gap: $spacer * 0.25;
+
+  .number-selected {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: $font-family-monospace;
+  }
+}
+
+#numbers-solution {
+  color: var(--bs-gray-600, #{$gray-600});
+
+  font-size: $font-size-base;
+  line-height: $input-line-height;
+
+  margin-bottom: $spacer;
+
+  .expression + .expression {
+    margin-left: 3px;
+  }
+}
+
+#numbers-solution, .number-selected {
+  padding-bottom: $input-padding-y;
+  position: relative;
+
+  &:before {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    right: 0;
+    left: 0;
+    height: 1px;
+    background-color: var(--bs-gray-400, #{$gray-400});
+    transform: scaleY(0.33);
+  }
+}
+
+#numbers-selection-buttons {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(5, 3rem);
+
+  gap: $spacer * 0.5;
+
+  .btn[disabled] {
+    opacity: 0.3;
+  }
+
+  .btn-b {
+    grid-column: span 3;
+  }
+  .btn-s {
+    grid-column: span 4;
+  }
+  .btn-clear {
+    grid-row: 5;
+    grid-column: 1 / span 4
+  }
+  .btn-backspace {
+    grid-row: 5;
+    grid-column: 9 / span 4
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    body {
+      $dark: #39393d;
+      $white: #fefefe;
+
+      --bs-gray-400: #3d3d40;
+      --bs-white: #1c1c1e;
+      --bs-body-color: #{$white};
+      --bs-light: #{$dark};
+      --bs-light-rgb: 33, 37, 41;
+      --bs-dark-rgb: 242, 242, 246;
+      --bs-primary-rgb: 10, 132, 255;
+      --bs-danger-rgb: 255, 69, 58;
+      --bs-warning-rgb: 255, 159, 10;
+
+      background-color: #000;
+
+      .btn-light {
+        @include button-variant($dark, $dark, $color: $white);
+      }
+    }
+  }
+}
