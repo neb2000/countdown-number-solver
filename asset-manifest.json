@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "/countdown-number-solver/static/css/main.ff4b5bbb.css",
-    "main.js": "/countdown-number-solver/static/js/main.e4a8a6df.js",
+    "main.css": "/countdown-number-solver/static/css/main.6f9de396.css",
+    "main.js": "/countdown-number-solver/static/js/main.fc252c77.js",
     "service-worker.js": "/countdown-number-solver/service-worker.js",
     "index.html": "/countdown-number-solver/index.html",
-    "main.ff4b5bbb.css.map": "/countdown-number-solver/static/css/main.ff4b5bbb.css.map",
-    "main.e4a8a6df.js.map": "/countdown-number-solver/static/js/main.e4a8a6df.js.map"
+    "main.6f9de396.css.map": "/countdown-number-solver/static/css/main.6f9de396.css.map",
+    "main.fc252c77.js.map": "/countdown-number-solver/static/js/main.fc252c77.js.map"
   },
   "entrypoints": [
-    "static/css/main.ff4b5bbb.css",
-    "static/js/main.e4a8a6df.js"
+    "static/css/main.6f9de396.css",
+    "static/js/main.fc252c77.js"
   ]
 }
