@@ -52,8 +52,8 @@ html, body {
   }
 }
 
-main.container {
-  padding: 1.25rem;
+main {
+  padding: 1.25rem !important;
   > .g-3 {
     --bs-gutter-y: 1.25rem;
   }
@@ -130,10 +130,14 @@ main.container {
   padding-bottom: $input-padding-y;
   position: relative;
 
+  small {
+    display: block;
+  }
+
   &:before {
     content: '';
     position: absolute;
-    bottom: -1px;
+    bottom: 0;
     right: 0;
     left: 0;
     height: 1px;
@@ -166,6 +170,40 @@ main.container {
   .btn-backspace {
     grid-row: 5;
     grid-column: 9 / span 4
+  }
+}
+
+@include media-breakpoint-between(xs, lg) {
+  @media (orientation: landscape) {
+    #root, #main-row {
+      --bs-gutter-y: 0;
+      height: 100%;
+    }
+
+    #numbers-quiz-solver {
+      order: -1;
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: auto 1fr auto;
+      height: 100%;
+
+      #numbers-selection-buttons {
+        grid-template-rows: repeat(5, 1fr);
+        .btn {
+          padding-top: 0.25 * $spacer;
+          padding-bottom: 0.25 * $spacer;
+        }
+      }
+
+      #numbers-solution {
+        white-space: nowrap;
+        overflow-x: auto;
+        small {
+          margin-left: 0.5 * $spacer;
+          display: inline;
+        }
+      }
+    }
   }
 }
 

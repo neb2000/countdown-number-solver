@@ -10,7 +10,7 @@ function QuizResult({resultFound, equation, offset}) {
     result = equation.split(' ').map((expression, index) => (<span className={`expression ${offset ? 'text-warning' : 'text-success'}`} key={index}>{expression}</span>));
 
     if (offset)
-      result = (<React.Fragment>{result}<br/><small>Off by {offset}</small></React.Fragment>);
+      result = (<React.Fragment>{result}<small>({offset} off)</small></React.Fragment>);
 
   } else {
     result = (<span className='text-danger'>Cannot find a solution</span>);
