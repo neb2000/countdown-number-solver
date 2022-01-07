@@ -13,7 +13,7 @@
       "type": "image/png"
     }
   ],
-  "id": "countdown-number-solver",
+  "id": "countdown-solver",
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#1c202b",
