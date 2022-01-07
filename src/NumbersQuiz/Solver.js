@@ -1,7 +1,7 @@
 import { CombinationMap } from './CombinationMap';
 import { Equation } from './Equation';
 
-export class QuizSolver {
+export class Solver {
   constructor(numbers, target) {
     this.combinationMap = new CombinationMap([...numbers]);
     this.target = target;

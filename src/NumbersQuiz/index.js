@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 
-import { QuizSolver } from './QuizSolver';
+import { Solver } from './Solver';
 import { handleFocus } from '../utils';
 
 function QuizResult({resultFound, equation, offset}) {
@@ -39,7 +39,7 @@ function NumbersQuizSolver() {
     event.preventDefault();
 
     setSolving(true);
-    const solver = new QuizSolver(numbers, targetNumber);
+    const solver = new Solver(numbers, targetNumber);
     setTimeout(() => {
       setSolution(solver.solve());
       setNumbers([]);
