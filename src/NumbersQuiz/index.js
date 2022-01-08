@@ -85,7 +85,7 @@ function NumbersQuizSolver() {
   )
 
   return (
-    <form onSubmit={findSolution}>
+    <form id='numbers-quiz-solver' onSubmit={findSolution}>
       {
         (solving || solution) ? (<code id='numbers-solution' className='d-block'>{solving ? 'Solving...' : (<QuizResult {...solution}></QuizResult>)}</code>) : selectedNumbersList
       }

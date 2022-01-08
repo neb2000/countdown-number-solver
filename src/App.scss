@@ -44,19 +44,23 @@ $border-radius: 10px;
 // Utilities
 @import "../node_modules/bootstrap/scss/utilities/api";
 
-
-html, body {
-  height: 100%;
-  body {
-    background-color: #f2f2f6;
+html, body, main {
+  @supports (-webkit-touch-callout: none) {
+    height: -webkit-fill-available;
   }
+}
+
+body {
+  -webkit-overflow-scrolling: touch;
+  min-height: 100vh;
+  background-color: #f2f2f6;
 }
 
 main {
   padding: 1.25rem !important;
-  > .g-3 {
-    --bs-gutter-y: 1.25rem;
-  }
+  display: grid;
+  gap: 1.25rem;
+  height: 100%;
   form {
     padding: $spacer;
     background: var(--bs-white, #{$white});
@@ -65,10 +69,6 @@ main {
 
     button[type="submit"] {
       margin-right: -$spacer;
-    }
-
-    & + form {
-      margin-top: 1.25rem;
     }
   }
 }
@@ -173,15 +173,38 @@ main {
   }
 }
 
+@include media-breakpoint-up(md) {
+  main {
+    grid-template-columns: 1.5fr 1fr;
+    grid-template-areas: 'numbers letters';
+    gap: 1.25rem;
+  }
+  #numbers-quiz-solver {
+    grid-area: numbers;
+
+    #numbers-solution {
+      white-space: nowrap;
+      overflow-x: auto;
+      small {
+        margin-left: 0.5 * $spacer;
+        display: inline;
+      }
+    }
+  }
+  #letters-quiz-solver {
+    grid-area: letters;
+  }
+}
+
 @include media-breakpoint-between(xs, lg) {
   @media (orientation: landscape) {
-    #root, #main-row {
-      --bs-gutter-y: 0;
-      height: 100%;
+    main {
+      grid-template-columns: 1.5fr 1fr;
+      gap: 1.25rem;
+      height: 100vh;
     }
 
     #numbers-quiz-solver {
-      order: -1;
       display: grid;
       grid-template-columns: 1fr;
       grid-template-rows: auto 1fr auto;
@@ -192,15 +215,6 @@ main {
         .btn {
           padding-top: 0.25 * $spacer;
           padding-bottom: 0.25 * $spacer;
-        }
-      }
-
-      #numbers-solution {
-        white-space: nowrap;
-        overflow-x: auto;
-        small {
-          margin-left: 0.5 * $spacer;
-          display: inline;
         }
       }
     }

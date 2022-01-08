@@ -69,7 +69,7 @@ function LettersQuizSolver() {
   const canFindWords = dictionary && lettersValid();
 
   return (
-    <form onSubmit={findWords}>
+    <form id='letters-quiz-solver' onSubmit={findWords}>
 
       <div className='d-flex'>
         <label htmlFor='input-target-number' className='visually-hidden'>Letters</label>
