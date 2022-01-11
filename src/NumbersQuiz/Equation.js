@@ -1,5 +1,9 @@
+import { Expression } from "./Expression";
+
 export class Equation {
   constructor(lft, rgt, opt) {
+    Object.assign(this, Expression);
+
     this.lft = lft;
     this.rgt = rgt;
     this.opt = opt;
@@ -29,10 +33,6 @@ export class Equation {
       default:
         return 0;
     }
-  }
-
-  canCombineWith(expression) {
-    return (this.bitmasksUsed & expression.bitmasksUsed) === 0;
   }
 
   toString() {

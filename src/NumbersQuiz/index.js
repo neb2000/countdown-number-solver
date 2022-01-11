@@ -3,10 +3,12 @@ import React, { useRef, useState } from 'react';
 import { Solver } from './Solver';
 import { handleFocus } from '../utils';
 
-function QuizResult({resultFound, equation, offset}) {
+function QuizResult({solutionFound, solution, offset}) {
   let result;
 
-  if (resultFound) {
+  if (solutionFound) {
+    const equation = `${solution} = ${solution.result}`;
+
     result = equation.split(' ').map((expression, index) => (<span className={`expression ${offset ? 'text-warning' : 'text-success'}`} key={index}>{expression}</span>));
 
     if (offset)
@@ -87,7 +89,7 @@ function NumbersQuizSolver() {
   return (
     <form id='numbers-quiz-solver' onSubmit={findSolution}>
       {
-        (solving || solution) ? (<code id='numbers-solution' className='d-block'>{solving ? 'Solving...' : (<QuizResult {...solution}></QuizResult>)}</code>) : selectedNumbersList
+        (solving || solution) ? (<code id='numbers-solution' className={`d-block ${solving ? 'solving' : 'solved'}`}>{solving ? 'Solving...' : (<QuizResult {...solution}></QuizResult>)}</code>) : selectedNumbersList
       }
       <div id='numbers-selection-buttons' className='mb-3' role='group'>
         {

@@ -1,5 +1,9 @@
+import { Expression } from "./Expression";
+
 export class SingleNumber {
   constructor(number, bitmask) {
+    Object.assign(this, Expression);
+
     this.number = number;
     this.bitmask = bitmask;
   }
@@ -14,10 +18,6 @@ export class SingleNumber {
 
   get result() {
     return this.number;
-  }
-
-  canCombineWith(expression) {
-    return (this.bitmasksUsed & expression.bitmasksUsed) === 0;
   }
 
   toString() {

@@ -7,36 +7,14 @@ export class Solver {
     this.target = target;
   }
 
-  getPossibleCombinationsFor = (expression1, expression2) => {
-    const combinations = [];
-    const [lft, rgt] = expression1.result > expression2.result ? [expression1, expression2] : [expression2, expression1];
-
-    const [lftResult, rgtResult] = [lft.result, rgt.result]
-
-    combinations.push(new Equation(lft, rgt, '+'));
-
-    if (lftResult !== 1)
-      combinations.push(new Equation(lft, rgt, '*'));
-
-    if (lftResult !== rgtResult) {
-      if (rgtResult + rgtResult !== lftResult)
-        combinations.push(new Equation(lft, rgt, '-'));
-
-      if (lftResult % rgtResult === 0 && rgtResult !== 1 && rgtResult * rgtResult !== lftResult)
-        combinations.push(new Equation(lft, rgt, '/'));
-    }
-
-    return combinations;
-  }
-
   solve() {
-    const { combinationMap, getPossibleCombinationsFor, target } = this;
+    const { combinationMap, target } = this;
 
     const potentialSolutions = [];
 
     for (let combinationLength = 1; combinationLength < 6; combinationLength++) {
       const combinations = combinationMap.getExistingCombinationFor(combinationLength);
-      let newCombinations = [];
+      const newCombinations = [];
 
       const compactableCombinations = combinationMap.getCompactableCombinationsFor(combinationLength);
 
@@ -52,21 +30,19 @@ export class Solver {
           const rgt = compactableCombinations[rgtIndex];
 
           if (lft.canCombineWith(rgt)) {
-            const combinationsForIteration = getPossibleCombinationsFor(lft, rgt);
+            const availableCombinations = lft.availableCombinationWith(rgt);
 
-            for (let [resultIndex, combinationsForIterationCount] = [0, combinationsForIteration.length]; resultIndex < combinationsForIterationCount; resultIndex++) {
-              const expression = combinationsForIteration[resultIndex];
-              if (expression.result === target) {
-                return {
-                  resultFound: true,
-                  equation: `${expression} = ${target}`
-                };
-              } else if (Math.abs(expression.result - target) <= 10) {
-                potentialSolutions.push(expression);
-              }
+            for (let [combinationIndex, availableCombinationsCount] = [0, availableCombinations.length]; combinationIndex < availableCombinationsCount; combinationIndex++) {
+              const expression = new Equation(...availableCombinations[combinationIndex]);
+              const resultOffset = Math.abs(expression.result - target);
+
+              if (resultOffset === 0)
+                return { solutionFound: true, solution: expression };
+              else if (resultOffset <= 10)
+                potentialSolutions.push({ expression, resultOffset });
+
+              newCombinations.push(expression);
             }
-
-            newCombinations = newCombinations.concat(combinationsForIteration);
           }
         };
       }
@@ -75,14 +51,11 @@ export class Solver {
     }
 
     if (potentialSolutions.length > 0) {
-      const bestResult = potentialSolutions.sort((a, b) => Math.abs(a.result - target) - Math.abs(b.result - target))[0];
-      return {
-        resultFound: true,
-        equation: `${bestResult} = ${bestResult.result}`,
-        offset: Math.abs(bestResult.result - target)
-      }
+      const bestResult = potentialSolutions.sort((a, b) => a.resultOffset - b.resultOffset)[0];
+
+      return { solutionFound: true, solution: bestResult.expression, offset: bestResult.resultOffset }
     }
 
-    return { resultFound: false };
+    return { solutionFound: false };
   }
 }

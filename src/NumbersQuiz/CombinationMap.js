@@ -23,17 +23,15 @@ export class CombinationMap {
 
   addToExistingCombinations = (newCombinations) => {
     const { resultsMap, combinationMap } = this;
-    const existingNumbers = new Set(combinationMap[1].map((expression) => expression.result));
 
     for (let [index, newCombinationsCount] = [0, newCombinations.length]; index < newCombinationsCount; index++) {
       const expression = newCombinations[index];
       const expressionResult = expression.result;
 
-      if (!resultsMap[expression.bitmasksUsed]) {
+      if (!resultsMap[expression.bitmasksUsed])
         resultsMap[expression.bitmasksUsed] = new Set();
-      }
 
-      if (!(existingNumbers.has(expressionResult) || resultsMap[expression.bitmasksUsed].has(expressionResult))) {
+      if (!(resultsMap[expression.bitmasksUsed].has(expressionResult))) {
         resultsMap[expression.bitmasksUsed].add(expressionResult);
         combinationMap[expression.expressionLength].push(expression);
       }

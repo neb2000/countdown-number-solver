@@ -1,24 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { handleFocus } from '../utils';
+import { Dictionary } from './Dictionary';
 
 function LettersQuizSolver() {
   const [dictionary, setDictionary] = useState(null);
   const [letters, setLetters] = useState('');
   const [results, setResults] = useState([]);
-
-  const isSuperset = (set, subset) => {
-    if (set.size < subset.size) {
-      return false;
-    }
-
-    for (const elem of subset) {
-      if (!set.has(elem)) {
-        return false;
-      }
-    }
-
-    return true;
-  }
 
   const cleanedLetters = () => {
     return letters.toLowerCase().replaceAll(/[^a-z]/g, '').split('');
@@ -31,24 +18,7 @@ function LettersQuizSolver() {
   const findWords = (event) => {
     event.preventDefault();
 
-    const groupedLetters = Object.values(cleanedLetters().reduce( (list, letter) => {
-      list[letter] ? list[letter].push(letter) : list[letter] = [letter];
-      return list;
-    }, {}));
-
-    const indexedLetters = new Set(groupedLetters.map((group) => group.map((letter, index) => `${letter}${index}`)).flat());
-    const wordsFound = [];
-
-    for (let [i, dictionaryLength] = [0, dictionary.length]; i < dictionaryLength; i++) {
-      if (wordsFound.length < 5) {
-        const word = dictionary[i];
-        if (isSuperset(indexedLetters, new Set(word.i))) {
-          wordsFound.push(word);
-        }
-      } else {
-        break;
-      }
-    }
+    const wordsFound = dictionary.findWordsFor(cleanedLetters());
 
     setResults(wordsFound);
     setLetters('');
@@ -60,7 +30,7 @@ function LettersQuizSolver() {
 
       const response = await fetch(dictUrl);
       const json = await response.json();
-      setDictionary(json);
+      setDictionary(new Dictionary(json));
     }
 
     loadDict();
