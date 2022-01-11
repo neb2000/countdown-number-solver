@@ -44,15 +44,9 @@ $border-radius: 10px;
 // Utilities
 @import "../node_modules/bootstrap/scss/utilities/api";
 
-html, body, main {
-  @supports (-webkit-touch-callout: none) {
-    height: -webkit-fill-available;
-  }
-}
 
 body {
   -webkit-overflow-scrolling: touch;
-  min-height: 100vh;
   background-color: #f2f2f6;
 }
 
@@ -198,11 +192,23 @@ main {
 
 @include media-breakpoint-between(xs, lg) {
   @media (orientation: landscape) {
+    body {
+      min-height: 100vh;
+      display: grid;
+    }
+
+    @supports (-webkit-touch-callout: none) {
+      html, body {
+        min-height: -webkit-fill-available;
+      }
+    }
+
     main {
       grid-template-columns: 1.5fr 1fr;
       gap: 1.25rem;
-      height: 100vh;
+      height: 100%;
     }
+
 
     #numbers-quiz-solver {
       display: grid;
